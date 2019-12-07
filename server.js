@@ -15,7 +15,7 @@ const PORT= process.env.PORT || 8081
 
 //used middleware for all the routes
 app.use(bodyparser.json());
-app.use(cors)();
+app.use(cors());
 app.use(morgan('dev'))
 
 //mounted apirouter for all routes of /api

@@ -5,3 +5,4 @@ const apirouter=express.Router();
 
 
 //exported the api router
+module.exports=apirouter;
