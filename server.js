@@ -5,6 +5,9 @@ const morgan=require('morgan');
 const errorhandler=require('errorhandler');
 const express= require('express');
 
+//imported the apirouter
+const apirouter=require('./api/api');
+
 //created instance of the express app
 const app =express();
 //port set to env port value else 8081
@@ -14,6 +17,10 @@ const PORT= process.env.PORT || 8081
 app.use(bodyparser.json());
 app.use(cors)();
 app.use(morgan('dev'))
+
+//mounted apirouter for all routes of /api
+app.use('/api',apirouter);
+
 app.use(errorhandler());
 
 //server started
