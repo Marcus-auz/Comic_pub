@@ -8,8 +8,8 @@ const apirouter=express.Router();
 
 //mounted the artistrouter to all /artist on apirouter
 apirouter.use('/artists',artistsrouter);
-//mounting the series router on all /series router
-seriesrouter.use('/series',seriesrouter);
+//mounting the series router on all /series router on apirouter 
+apirouter.use('/series',seriesrouter);
 
 //exported the api router
 module.exports=apirouter;

@@ -4,6 +4,7 @@ const db=new sqlite3.Database('./database.sqlite');
 
 //for sequential order when we run migration thats why serialize
 db.serialize(function(){
+    //artist table 
     db.run('CREATE TABLE IF NOT EXISTS `Artist` ( ' +
     '`id` INTEGER NOT NULL, ' +
     '`name` TEXT NOT NULL, ' +
@@ -12,12 +13,14 @@ db.serialize(function(){
     '`is_currently_employed` INTEGER NOT NULL DEFAULT 1, ' +
     'PRIMARY KEY(`id`) )');
 
-    db.run('CREATE TABLE IF NOT EXISTS `Series`('+
-    '`id` INTEGER NOT NULL,'+
-    '`name`TEXT NOT NULL,'+
-    '`description`TEXT NOT NULL',+
-    'PRIMARY KEY(`id`))'); 
-    
+    //series table
+    db.run('CREATE TABLE IF NOT EXISTS `Series` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`name` TEXT NOT NULL, ' +
+    '`description` TEXT NOT NULL, ' +
+    'PRIMARY KEY(`id`) )'); 
+
+    //issue table
     db.run('CREATE TABLE IF NOT EXISTS `Issue`('+
     '`id`INTEGER NOT NULL,'+
     '`name`TEXT NOT NULL,'+
