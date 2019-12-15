@@ -1,12 +1,12 @@
 {
-  "name": "x-press-publishing",
+  "name": "comic_pub",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
+  "author": "auz",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",

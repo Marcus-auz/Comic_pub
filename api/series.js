@@ -1,6 +1,9 @@
 const express=require('express');
 const seriesrouter=express.Router();
 const sqlite3=require('sqlite3');
+const issuerouter=require('./issues');
+//mounted issue router on the specefied route
+issuerouter.use('/:seriesId/issues',issuerouter);
 
 const db=new sqlite3.Database(process.env.TEST_DATABASE ||'./database.sqlite');
 
@@ -42,7 +45,7 @@ seriesrouter.post('/',(req,res,next)=>{
     if(!name || !description){
         return res.statusCode(400);
     }
-    const sql=('INSERT INTO Series(name,description)VALUES($name,$description');
+    const sql=('INSERT INTO Series(name,description)VALUES($name,$description)');
     const values={
         $name:name,
         $description:description
@@ -80,6 +83,29 @@ seriesrouter.put('/:seriesId',(req,res,next)=>{
         }
     });
 
+});
+
+seriesrouter.delete('/:issueId',(req,res,next)=>{
+    const issueSql='SELECT * FROM Issue WHERE Issue.series_id=$seriesId';
+    const issueValues={$seriesId:req.param.seriesId};
+    db.get(issueSql,issueValues,(err,issue)=>{
+        if(err){
+            next(err);
+        }else if(issue){
+            res.sendStatus(400);
+        }else{
+            const deleteSql='DELETE FROM Series WHERE Series.id=$seriesId';
+            const deletevalue={$seriesId:req.param.seriesId};
+
+            db.run(deleteSql,deletevalue,(err,issue)=>{
+                if(err){
+                    next(err);
+                }else{
+                    res.sendStatus(204);
+                }
+            });
+        }
+    });
 });
 
 module.exports=seriesrouter;
