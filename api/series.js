@@ -2,8 +2,6 @@ const express=require('express');
 const seriesrouter=express.Router();
 const sqlite3=require('sqlite3');
 const issuerouter=require('./issues');
-//mounted issue router on the specefied route
-issuerouter.use('/:seriesId/issues',issuerouter);
 //database connected
 const db=new sqlite3.Database(process.env.TEST_DATABASE ||'./database.sqlite');
 
@@ -22,6 +20,8 @@ seriesrouter.param('seriesId',(req,res,next,seriesId)=>{
         }
     });
 });
+//mounted issue router on the specefied route
+seriesrouter.use('/:seriesId/issues',issuerouter);
 
 //retrieve all series that exist(return error if not such table)
 seriesrouter.get('/',(req,res,next)=>{
@@ -92,27 +92,27 @@ seriesrouter.put('/:seriesId', (req, res, next) => {
 
 //this series should not have any issues and if no issue then delete the series
 //foreign and primary key are used to find the corresponding series with that id after verifying that series has no issue
-seriesrouter.delete('/:issueId',(req,res,next)=>{
-    const issueSql='SELECT * FROM Issue WHERE Issue.series_id=$seriesId';
-    const issueValues={$seriesId:req.param.seriesId};
-    db.get(issueSql,issueValues,(err,issue)=>{
-        if(err){
-            next(err);
-        }else if(issue){
-            res.sendStatus(400);
-        }else{
-            const deleteSql='DELETE FROM Series WHERE Series.id=$seriesId';
-            const deletevalue={$seriesId:req.param.seriesId};
-
-            db.run(deleteSql,deletevalue,(err,issue)=>{
-                if(err){
-                    next(err);
-                }else{
-                    res.sendStatus(204);
-                }
-            });
-        }
+seriesrouter.delete('/:seriesId', (req, res, next) => {
+    const issueSql = 'SELECT * FROM Issue WHERE Issue.series_id = $seriesId';
+    const issueValues = {$seriesId: req.params.seriesId};
+    db.get(issueSql, issueValues, (error, issue) => {
+      if (error) {
+        next(error);
+      } else if (issue) {
+        res.sendStatus(400);
+      } else {
+        const deleteSql = 'DELETE FROM Series WHERE Series.id = $seriesId';
+        const deleteValues = {$seriesId: req.params.seriesId};
+  
+        db.run(deleteSql, deleteValues, (error) => {
+          if (error) {
+            next(error);
+          } else {
+            res.sendStatus(204);
+          }
+        });
+      }
     });
-});
+  });
 
 module.exports=seriesrouter;
